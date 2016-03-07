@@ -1,0 +1,72 @@
+body { 
+	background-color: #085;
+	color: #ffa;
+}
+
+table {
+/*    border-collapse: collapse;*/
+	background-color: #7a3;
+}
+
+table, td, tr, th {
+    border: 1px dotted #061;
+}
+
+.swieto { 
+	color: red; 
+}
+
+.name { 
+	color: #041;
+	text-align: center; 
+	font-weight: bold; 
+}
+	
+td {	
+	background-size: 210px 155px;
+	color: #051;
+	padding:5px 11px;
+	vertical-align: top;
+}
+	
+.m1,.m2,.m3,.m4,.m5,.m6,.m7,.m8,.m9,.m10,.m11,.m12 { 
+	width: 210px; 
+	height:155px; 
+	padding: 0;
+}
+
+h1 { text-align:center; }
+h1, table { margin: 0 auto; }
+hr { margin: 2px; 
+	border: 0;
+    border-bottom: 1px dotted #aa2;
+    background: #cc4;
+}
+.m1 { background-image: url("images/P1260061.jpg"); }
+.m2 { background-image: url("images/P1250391_m.jpg"); }
+.m3 { background-image: url("images/foto_001.jpg"); }
+.m4 { background-image: url("images/P1260523.jpg"); }
+.m5 { background-image: url("images/foto_006.jpg"); }
+.m6 { background-image: url("images/P1060103.jpg"); }
+.m7 { background-image: url("images/P1240116.jpg"); }
+.m8 { background-image: url("images/pod_lopianem.png"); }
+.m9 { background-image: url("images/P1240116.jpg"); }
+/*.m10 { background-image: url("images/P1240116.jpg"); }*/
+.m10 { background-image: url("images/P1060011.jpg"); }
+.m11 { background-image: url("images/P1090170.jpg"); }
+.m12 { background-image: url("images/P1260872.jpg"); }
+
+.m1 { background-image: url("images/P1260061.jpg"); }
+.m2 { background-image: url("images/P1250391_m.jpg"); }
+/*.m3 { background-image: url("images/P1260037.jpg"); }*/
+.m4 { background-image: url("images/P1260523.jpg"); }
+/*.m5 { background-image: url("images/P1060011.jpg"); }*/
+.m6 { background-image: url("images/foto_004.jpg"); }
+.m7 { background-image: url("images/foto_005.jpg"); }
+.m8 { background-image: url("images/pod_lopianem.png"); }
+.m9 { background-image: url("images/P1240116.jpg"); }
+/*.m10 { background-image: url("images/P1240116.jpg"); }*/
+/*.m10 { background-image: url("images/P1170458.jpg"); }*/
+.m11 { background-image: url("images/P1090170.jpg"); }
+.m12 { background-image: url("images/P1260872.jpg"); }
+
