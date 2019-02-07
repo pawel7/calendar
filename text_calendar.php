@@ -2,18 +2,12 @@
 <html lang="pl">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link rel="stylesheet" type="text/css" href="calendar.css">
+    <link rel="stylesheet" type="text/css" href="calendar_old.css">
 	<title>Kalendarz - wiek XXI</title>
 </head>
 <body>
 <pre>
 <?php
-
-function P( $html='', $class='' )
-{
-	$cl = ( $class == '' ) ? '' : " class=\"$class\"";
-	return "<p$cl>".$html.'</p>';
-}
 
 function Span( $html='', $class='' )
 {
@@ -21,48 +15,18 @@ function Span( $html='', $class='' )
 	return "<span$cl>".$html.'</span>';
 }
 
-function TD( $html='', $class='' )
-{
-	$cl = ( $class == '' ) ? '' : " class=\"$class\"";
-	return "<td$cl>".$html.'</td>';
-}
-
-function New_Calendar( $rok )
-{
-	$Miesiace = Calendar( $rok );
-	Tabela_Miesiecy( 3, 4, $Miesiace );
-}
-
-function Tabela_Miesiecy( $nCol, $nRow, $Miesiace )
-{
-	echo "<table>\n";
-	for( $i = 0; $i < $nRow; $i++ )
-	{
-		echo "<tr>";
-		for( $j = 0; $j < $nCol; $j++ )
-		{
-			$m = $j * $nRow + $i;
-			echo TD( $Miesiace[ $m ] );
-			echo TD( ' ', 'm'.($m+1) );
-		}
-		echo "</tr>\n";
-	}
-	echo "</table>\n";
-}
-	
-function CalendarM( $il_dni, $d_pocz, $miesiac, $rok )
+function CalendarM_New2( $il_dni, $d_pocz, $miesiac, $rok )
 {
 	$Skroty_Dni = array( "P", "W", "Ś", "C", "P", "S", "N" );
 	
-	//$html = sprintf( "%22s %d\n", $miesiac, $rok );
-	$html = P( $miesiac.' '.$rok, 'name' ); 
+	printf( "\n%22s %d\n", $miesiac, $rok );
 		
 	for( $i = 0; $i < 7; $i++ )
 	{
 		$s = $i == 6 ? Span( $Skroty_Dni[ 6 ], 'swieto' ) : $Skroty_Dni[ $i ];
-		$html .= "  {$s} ";
+		echo "  {$s} ";
 	}
-	$html .= "\n<hr>".str_repeat( '    ', $d_pocz );
+	echo "\n".str_repeat( '    ', $d_pocz );
 	
 	for( $d = 1; $d <= $il_dni; $d++ )
 	{
@@ -70,9 +34,8 @@ function CalendarM( $il_dni, $d_pocz, $miesiac, $rok )
 		$koniec_wiersza = $jest_niedziela || $d == $il_dni;
 		$d_str = sprintf( "%3d", $d );
 		$dzien = $jest_niedziela ? Span( $d_str, 'swieto' ) : $d_str;
-		$html .= sprintf( $koniec_wiersza ? "%s\n" : "%s ", $dzien );
+		printf( $koniec_wiersza ? "%s\n" : "%s ", $dzien );
 	}
-	return $html;
 }
 
 function Jest_Przestepny(  $rok )
@@ -84,7 +47,7 @@ function Jest_Przestepny(  $rok )
 function Calendar( $rok )
 {
 	$Reszty_Mies = array( 3, 0, 3, 2, 3, 2, 3, 3, 2, 3, 2, 3 );
-	$Nazwy_Mies = array( "Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień" );
+	$Miesiace = array( "Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień" );
 	DEFINE( 'POCZ_WIEKU_XXI', 5 ); // 1 I 2000 - $sobota
 	$pocz_roku = POCZ_WIEKU_XXI;
 	
@@ -101,20 +64,18 @@ function Calendar( $rok )
 		 $Reszty_Mies[ 1 ] = 1;
 	}
 	
-	echo "   <h1>Kalendarz na rok {$rok}</h1>\n";
-	$pocz_mies = $pocz_roku;
-	$Miesiace = array();
+	echo "   <b>Kalendarz na rok {$rok}</b>\n";
+	$pocz_mies = $pocz_roku; 
 	for( $m = 0; $m < 12; $m++ )
 	{
 		$il_dni = 28 + $Reszty_Mies[ $m ];
-		$Miesiace[ $m ] = CalendarM( $il_dni, $pocz_mies, $Nazwy_Mies[ $m ], $rok );
+		CalendarM_New2( $il_dni, $pocz_mies, $Miesiace[ $m ], $rok );
 		$pocz_mies = ( $pocz_mies + $Reszty_Mies[ $m ] ) % 7;
 	}
-	return $Miesiace;
 }
-	 
-New_Calendar( 2016 );
-//New_Calendar( 2017 );
+
+$current_year = isset( $_GET['year'] ) ? $_GET['year'] : date( 'Y' );
+New_Calendar( $current_year );
 
 ?>
 </pre>

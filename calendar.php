@@ -1,63 +1,50 @@
 <?php
 
-function P( $html='', $class='' )
+require_once "lib_html.php";	// P, Span, TD
+
+// wygeneruj kalendarz na rok $year mający $nRows wierszy i $nCols kolumn
+function Generate_Calendar( $year, $nCols, $nRows )
 {
-	$cl = ( $class == '' ) ? '' : " class=\"$class\"";
-	return "<p$cl>".$html.'</p>';
+	$Months_Calendar = Generate_All_Months_Calendar( $year );
+	$html = "<pre><h1>Kalendarz na rok {$year}</h1>";
+	$html .= Generate_Months_Table( $nCols, $nRows, $Months_Calendar );
+	$html .= "</pre>\n";
+	return $html;
 }
 
-function P( $html='', $class='' )
+// wygeneruj tabelę mającą $nRows wierszy i $nCols kolumn, 
+// której komórkami są miesiące i obrazy dla danego miesiąca ( przez css jako elementy o klasie m1 do m12 )
+function Generate_Months_Table( $nCols, $nRows, $Months )
 {
-	$cl = ( $class == '' ) ? '' : " class=\"$class\"";
-	return "<p$cl>".$html.'</p>';
-}
-
-function Span( $html='', $class='' )
-{
-	$cl = ( $class == '' ) ? '' : " class=\"$class\"";
-	return "<span$cl>".$html.'</span>';
-}
-
-function TD( $html='', $class='' )
-{
-	$cl = ( $class == '' ) ? '' : " class=\"$class\"";
-	return "<td$cl>".$html.'</td>';
-}
-
-function New_Calendar( $rok )
-{
-	$Miesiace = Calendar( $rok );
-	Tabela_Miesiecy( 3, 4, $Miesiace );
-}
-
-function Tabela_Miesiecy( $nCol, $nRow, $Miesiace )
-{
-	echo "<table>\n";
-	for( $i = 0; $i < $nRow; $i++ )
+	$html = "<table>\n";
+	for( $i = 0; $i < $nRows; $i++ )
 	{
-		echo "<tr>";
-		for( $j = 0; $j < $nCol; $j++ )
+		$html .= "<tr>";
+		for( $j = 0; $j < $nCols; $j++ )
 		{
-			$m = $j * $nRow + $i;
-			echo TD( $Miesiace[ $m ] );
-			echo TD( ' ', 'm'.($m+1) );
+			$m = $j * $nRows + $i;
+			$html .= TD( ' ', 'm'.($m+1)).TD( $Months[ $m ] );//.TD( ' ', 'm'.($m+1) );
 		}
-		echo "</tr>\n";
+		$html .= "</tr>\n";
 	}
-	echo "</table>\n";
+	$html .= "</table>\n";
+	return $html;
 }
-	
-function CalendarM( $il_dni, $d_pocz, $miesiac, $rok )
+
+// Wygeneruj html z kalendarzem na dany miesiąc roku, mający $il_dni dni, 
+// zaczynający się w dniu $d_pocz ( 0 - poniedziałek, ... 6 - niedziela )
+function Generate_Month_Calendar( $il_dni, $d_pocz, $month, $year )
 {
-	$Skroty_Dni = array( "P", "W", "Ś", "C", "P", "S", "N" );
+	$Days_Abbr = array( "P", "W", "Ś", "C", "P", "S", "N" );
 	
-	//$html = sprintf( "%22s %d\n", $miesiac, $rok );
-	$html = P( $miesiac.' '.$rok, 'name' ); 
+	//$html = sprintf( "%22s %d\n", $month, $year );
+	$html = P( $month/*.' '.$year*/, 'name' ); 
 		
 	for( $i = 0; $i < 7; $i++ )
 	{
-		$s = $i == 6 ? Span( $Skroty_Dni[ 6 ], 'swieto' ) : $Skroty_Dni[ $i ];
-		$html .= "  {$s} ";
+		$klasa = $i == 6 ? 'swieto' : 'powsz';
+		$sp = Span( $Days_Abbr[ $i ], $klasa );
+		$html .= "  {$sp} ";
 	}
 	$html .= "\n<hr>".str_repeat( '    ', $d_pocz );
 	
@@ -72,41 +59,41 @@ function CalendarM( $il_dni, $d_pocz, $miesiac, $rok )
 	return $html;
 }
 
-function Jest_Przestepny(  $rok )
+function Jest_Przestepny(  $year )
 {
-	return ( $rok % 4 == 0 ) && (( $rok % 100 != 0 ) || ( $rok % 400 == 0 ));
+	return ( $year % 4 == 0 ) && (( $year % 100 != 0 ) || ( $year % 400 == 0 ));
 }
 
-/* Wypisz kalendarz na dany rok >= 2000 */
-function Calendar( $rok )
+//Wygeneruj i zwróć tablicę z kodem HTML dla poszczegolnych miesiecy roku (rok >= 2000)  
+function Generate_All_Months_Calendar( $year )
 {
-	$Reszty_Mies = array( 3, 0, 3, 2, 3, 2, 3, 3, 2, 3, 2, 3 );
-	$Nazwy_Mies = array( "Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień" );
+		// reszty z dzielenia ilości dni miesiąca przez 7
+	$Month_Dif = array( 3, 0, 3, 2, 3, 2, 3, 3, 2, 3, 2, 3 );
+	$Month_Names = array( "Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień" );
 	DEFINE( 'POCZ_WIEKU_XXI', 5 ); // 1 I 2000 - $sobota
 	$pocz_roku = POCZ_WIEKU_XXI;
 	
 		// Oblicz którego dnia tygodnia zaczyna sie dany rok
-	for( $year = 2000; $year < $rok; $year++ )
+	for( $year = 2000; $year < $year; $year++ )
 	{
 		$dni = 1;	// 365 = 52 $tygodnie + 1 $dzień
 		if( Jest_Przestepny( $year )) $dni++;
 		$pocz_roku = ($pocz_roku + $dni) % 7;
 	}
 	
-	if ( Jest_Przestepny( $rok )) 
+	if ( Jest_Przestepny( $year )) 
 	{	// ustaw, $że $luty $ma 29 $dni
-		 $Reszty_Mies[ 1 ] = 1;
+		 $Month_Dif[ 1 ] = 1;
 	}
 	
-	echo "   <h1>Kalendarz na rok {$rok}</h1>\n";
+	//echo "   <h1>Kalendarz na rok {$year}</h1>\n";
 	$pocz_mies = $pocz_roku;
-	$Miesiace = array();
+	$Months = array();
 	for( $m = 0; $m < 12; $m++ )
 	{
-		$il_dni = 28 + $Reszty_Mies[ $m ];
-		$Miesiace[ $m ] = CalendarM( $il_dni, $pocz_mies, $Nazwy_Mies[ $m ], $rok );
-		$pocz_mies = ( $pocz_mies + $Reszty_Mies[ $m ] ) % 7;
+		$il_dni = 28 + $Month_Dif[ $m ];
+		$Months[ $m ] = Generate_Month_Calendar( $il_dni, $pocz_mies, $Month_Names[ $m ], $year );
+		$pocz_mies = ( $pocz_mies + $Month_Dif[ $m ] ) % 7;
 	}
-	return $Miesiace;
+	return $Months;
 }
-
